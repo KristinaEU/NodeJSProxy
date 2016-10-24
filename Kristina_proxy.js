@@ -1,9 +1,8 @@
 'use strict';
 
+//Set environment for service run
 process.chdir('/Users/Administrator/Desktop/NodeJS');
-
 process.env.Path = process.env.Path + ";C:\\Program Files (x86)\\ffmpeg\\bin";
-console.log(process.env.Path);
 
 console.log("New server");
 var nodeStatic = require('node-static');
@@ -16,6 +15,7 @@ var WebSocket = require('ws').Server;
 var options = {
   key: fs.readFileSync('cert/ec2-52-29-254-9.key'),
   cert: fs.readFileSync('cert/ec2-52-29-254-9.crt'),
+  agent: false,
   requestCert: true,
   rejectUnauthorized: false
 };
@@ -34,11 +34,43 @@ var server = http.createServer(options, function(req, res) {
   fileServer.serve(req, res);
 })
 
-//Video:
+var myAudioStream = new require('stream').Transform();
+var myAudioBuf = [];
+myAudioStream._transform = function (chunk,encoding,done) 
+{
+	if (chunk.length < 50){
+	    myAudioBuf.push(chunk);
+	} else {
+		if (myAudioBuf.length > 0){
+			myAudioBuf.push(chunk);
+			this.push(Buffer.concat(myAudioBuf));
+			myAudioBuf = [];	
+		} else {
+			this.push(chunk);	
+		}
+	}
+    done()
+}
+myAudioStream.on('error',function (err){
+    console.log("stream error",err);
+}).on('pause',function(){ console.log("Audio paused")})
+.on('end',function(){ console.log("Audio ended")})
+;
 var mystream = new require('stream').Transform();
+var myBuf = [];
 mystream._transform = function (chunk,encoding,done) 
 {
-    this.push(chunk)
+    if (chunk.length < 50){
+	    myBuf.push(chunk);
+	} else {
+		if (myBuf.length > 0){
+			myBuf.push(chunk);
+			this.push(Buffer.concat(myBuf));
+			myBuf = [];	
+		} else {
+			this.push(chunk);	
+		}
+	}
     done()
 }
 mystream.on('error',function (err){
@@ -47,8 +79,9 @@ mystream.on('error',function (err){
 .on('end',function(){ console.log("ended")})
 ;
 
-var command = ffmpeg().input(mystream)
+var videoCommand = ffmpeg().input(mystream)
   //.inputOptions('-loglevel verbose')
+  .inputOptions('-nostdin')
   .inputFormat('webm')
   .noAudio()
   .videoCodec('libx264')
@@ -75,25 +108,14 @@ var command = ffmpeg().input(mystream)
   .on('end',function(){
     console.log('ffmpeg ended');
   })
-.run();
-
-
-//Audio:
-var myAudioStream = new require('stream').Transform();
-myAudioStream._transform = function (chunk,encoding,done) 
-{
-    this.push(chunk)
-    done()
-}
-myAudioStream.on('error',function (err){
-    console.log("stream error",err);
-}).on('pause',function(){ console.log("Audio paused")})
-.on('end',function(){ console.log("Audio ended")})
-;
+  .on('error', function(error){
+     console.log('ignore ffmpeg error',error);
+  });
 
 //Spawned Ffmpeg with command: ffmpeg -loglevel verbose -f webm -i pipe:0 -acodec copy -vn -f mpegts -preset veryfast -tune zerolatency udp://127.0.0.1:2222
-var command = ffmpeg().input(myAudioStream)
+var audioCommand = ffmpeg().input(myAudioStream)
   //.inputOptions('-loglevel verbose')
+  .inputOptions('-nostdin')
   .inputFormat('webm')
   .noVideo()
   .audioCodec('copy')
@@ -117,15 +139,24 @@ var command = ffmpeg().input(myAudioStream)
   .on('end',function(){
     console.log('Audio ffmpeg ended');
   })
-.run();
+  .on('error', function(error){
+     console.log('ignore ffmpeg error',error);
+  });
+
 
 //Websocket (Both audio and video):
 var wss = new WebSocket({server:server});
 wss.on('connection', function(ws){
   console.log("New connection");
-
+  ////reset/close ffmpeg
+  videoCommand.kill();
+  audioCommand.kill();
+  
+  videoCommand.run();
+  audioCommand.run();
+    
   ws.on('message', function(data, flags){
-    //console.log("Received data: " + data.length, flags);
+    console.log("Received data: " + data.length, flags);
     mystream.write(data);
     mystream.resume();
     myAudioStream.write(data);
@@ -134,6 +165,8 @@ wss.on('connection', function(ws){
 
   ws.on('close', function(){
     console.log("Disconnected");
+	  videoCommand.kill();
+	  audioCommand.kill();
   });
 
 });
