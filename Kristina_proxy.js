@@ -8,7 +8,8 @@ console.log("New server");
 var nodeStatic = require('node-static');
 var ffmpeg = require('fluent-ffmpeg');
 
-var http = require('https');
+var http = require('http');
+var https = require('https');
 var fs = require('fs');
 var WebSocket = require('ws').Server;
 
@@ -20,7 +21,7 @@ var options = {
   rejectUnauthorized: false
 };
 var fileServer = new(nodeStatic.Server)();
-var server = http.createServer(options, function(req, res) {
+var server = https.createServer(options, function(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader('Access-Control-Request-Method', '*');
 	res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
@@ -161,8 +162,35 @@ wss.on('connection', function(ws){
       mystream.resume();
       myAudioStream.write(data);
       myAudioStream.resume();
-    } else {
-		console.log("received non buffer:",JSON.stringify(data));
+    } else if (data["target"] == "VSM") {
+		//Send message to VSM
+		var options = {
+			hostname: 'localhost',
+			port: 11220,
+			path: '/',
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		};
+		
+		var req = http.request(options, (res) => {
+			console.log("STATUS: ${res.statusCode}");
+			console.log("HEADERS: ${JSON.stringify(res.headers)}");
+			res.setEncoding('utf8');
+			res.on('data', (chunk) => {
+				console.log("BODY: ${chunk}");
+			});
+			res.on('end', () => {
+				console.log("No more data in response.");
+			});
+		});
+		req.on('error', (e) => {
+			console.log("problem with request: ${e.message}");
+		});
+		// write data to request body
+		req.write(data);
+		req.end();
 	}
   });
 
