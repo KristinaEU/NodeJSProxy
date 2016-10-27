@@ -157,10 +157,15 @@ wss.on('connection', function(ws){
     
   ws.on('message', function(data, flags){
     console.log("Received data: " + data.length, flags);
-    mystream.write(data);
-    mystream.resume();
-    myAudioStream.write(data);
-    myAudioStream.resume();
+
+    if (typeof data["data"] != "undefined"){
+      mystream.write(data["data"]);
+      mystream.resume();
+      myAudioStream.write(data["data"]);
+      myAudioStream.resume();
+    } else {
+      console.log("didn't understand the input:",data);
+    }
 	});
 
   ws.on('close', function(){
@@ -171,4 +176,7 @@ wss.on('connection', function(ws){
 
 });
 server.listen(16160);
+
+//Todo: Introduce a wrapping envelop around the GUI websocket data, allowing multiple streams to be handled. Specifically introduce a control stream for the VSM and SSI.
+
 
