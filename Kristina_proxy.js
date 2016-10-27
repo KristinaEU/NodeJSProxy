@@ -100,7 +100,7 @@ var videoCommand = ffmpeg().input(mystream)
     //console.log('Processing: ',progress);
   })
   .on('stderr', function(stderrLine) {
-    console.log('Stderr output: ' + stderrLine);
+    //console.log('Stderr output: ' + stderrLine);
   }).on('codecData', function(data) {
     console.log('Input is ' + data.audio + ' audio ' +
       'with ' + data.video + ' video');
@@ -131,7 +131,7 @@ var audioCommand = ffmpeg().input(myAudioStream)
     //console.log('Audio Processing: ',progress);
   })
   .on('stderr', function(stderrLine) {
-    console.log('Audio Stderr output: ' + stderrLine);
+    //console.log('Audio Stderr output: ' + stderrLine);
   }).on('codecData', function(data) {
     console.log('Input is ' + data.audio + ' audio ' +
       'with ' + data.video + ' video');
@@ -156,17 +156,15 @@ wss.on('connection', function(ws){
   audioCommand.run();
     
   ws.on('message', function(data, flags){
-    console.log("Received data: " + data.length, flags);
-
-    if (typeof data["data"] != "undefined"){
-      mystream.write(data["data"]);
+	if (Buffer.isBuffer(data)){
+      mystream.write(data);
       mystream.resume();
-      myAudioStream.write(data["data"]);
+      myAudioStream.write(data);
       myAudioStream.resume();
     } else {
-      console.log("didn't understand the input:",data);
-    }
-	});
+		console.log("received non buffer:",JSON.stringify(data));
+	}
+  });
 
   ws.on('close', function(){
     console.log("Disconnected");
