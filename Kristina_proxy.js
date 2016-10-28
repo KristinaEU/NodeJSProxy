@@ -162,7 +162,9 @@ wss.on('connection', function(ws){
       mystream.resume();
       myAudioStream.write(data);
       myAudioStream.resume();
-    } else if (data["target"] == "VSM") {
+    } else {
+	  var parsed_data = JSON.parse(data);
+	 if (parsed_data["target"] === "VSM") {
 		//Send message to VSM
 		var options = {
 			hostname: 'localhost',
@@ -191,7 +193,10 @@ wss.on('connection', function(ws){
 		// write data to request body
 		req.write(data);
 		req.end();
-	}
+		console.log("forwarding VSM request",parsed_data);
+	} else {
+		console.log("Unknown data received:",data,parsed_data);
+	}}
   });
 
   ws.on('close', function(){
@@ -202,7 +207,5 @@ wss.on('connection', function(ws){
 
 });
 server.listen(16160);
-
-//Todo: Introduce a wrapping envelop around the GUI websocket data, allowing multiple streams to be handled. Specifically introduce a control stream for the VSM and SSI.
 
 

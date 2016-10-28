@@ -1,0 +1,8 @@
+<service>
+<id>nodeproxy.exe</id>
+<name>nodeProxy</name>
+<description>A KRISTINA agent proxy service.</description>
+<executable>C:\Program Files\nodejs\node.exe</executable>
+<arguments>--harmony "C:\Users\Administrator\AppData\Roaming\npm\node_modules\node-windows\lib\wrapper.js" -f "C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js" -l "nodeProxy" -g 0.25 -w 1 -r 3 -a n</arguments>
+<logmode>rotate</logmode>
+</service>

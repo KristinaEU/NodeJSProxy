@@ -1,0 +1,444 @@
+fs.js:634
+  return binding.open(pathModule._makeLong(path), stringToFlags(flags), mode);
+                 ^
+
+Error: ENOENT: no such file or directory, open 'C:\Windows\system32\cert\ec2-52-29-254-9.key'
+    at Error (native)
+    at Object.fs.openSync (fs.js:634:18)
+    at Object.fs.readFileSync (fs.js:502:33)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:12:11)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+    at Function.Module._load (module.js:409:3)
+    at Function.Module.runMain (module.js:575:10)
+fs.js:634
+  return binding.open(pathModule._makeLong(path), stringToFlags(flags), mode);
+                 ^
+
+Error: ENOENT: no such file or directory, open 'C:\Windows\system32\cert\ec2-52-29-254-9.key'
+    at Error (native)
+    at Object.fs.openSync (fs.js:634:18)
+    at Object.fs.readFileSync (fs.js:502:33)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:12:11)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+    at Function.Module._load (module.js:409:3)
+    at Function.Module.runMain (module.js:575:10)
+fs.js:634
+  return binding.open(pathModule._makeLong(path), stringToFlags(flags), mode);
+                 ^
+
+Error: ENOENT: no such file or directory, open 'C:\Windows\system32\cert\ec2-52-29-254-9.key'
+    at Error (native)
+    at Object.fs.openSync (fs.js:634:18)
+    at Object.fs.readFileSync (fs.js:502:33)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:12:11)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+    at Function.Module._load (module.js:409:3)
+    at Function.Module.runMain (module.js:575:10)
+fs.js:634
+  return binding.open(pathModule._makeLong(path), stringToFlags(flags), mode);
+                 ^
+
+Error: ENOENT: no such file or directory, open 'C:\Windows\system32\cert\ec2-52-29-254-9.key'
+    at Error (native)
+    at Object.fs.openSync (fs.js:634:18)
+    at Object.fs.readFileSync (fs.js:502:33)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:12:11)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+    at Function.Module._load (module.js:409:3)
+    at Function.Module.runMain (module.js:575:10)
+fs.js:634
+  return binding.open(pathModule._makeLong(path), stringToFlags(flags), mode);
+                 ^
+
+Error: ENOENT: no such file or directory, open 'C:\Windows\system32\cert\ec2-52-29-254-9.key'
+    at Error (native)
+    at Object.fs.openSync (fs.js:634:18)
+    at Object.fs.readFileSync (fs.js:502:33)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:12:11)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+    at Function.Module._load (module.js:409:3)
+    at Function.Module.runMain (module.js:575:10)
+fs.js:634
+  return binding.open(pathModule._makeLong(path), stringToFlags(flags), mode);
+                 ^
+
+Error: ENOENT: no such file or directory, open 'C:\Windows\system32\cert\ec2-52-29-254-9.key'
+    at Error (native)
+    at Object.fs.openSync (fs.js:634:18)
+    at Object.fs.readFileSync (fs.js:502:33)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:12:11)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+    at Function.Module._load (module.js:409:3)
+    at Function.Module.runMain (module.js:575:10)
+C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:3
+process.chdir('C:\Users\Administrator\Desktop\NodeJS');
+        ^
+
+Error: ENOENT: no such file or directory, uv_chdir
+    at Error (native)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:3:9)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+    at Function.Module._load (module.js:409:3)
+    at Function.Module.runMain (module.js:575:10)
+    at startup (node.js:160:18)
+    at node.js:456:3
+C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:3
+process.chdir('C:\Users\Administrator\Desktop\NodeJS');
+        ^
+
+Error: ENOENT: no such file or directory, uv_chdir
+    at Error (native)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:3:9)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+    at Function.Module._load (module.js:409:3)
+    at Function.Module.runMain (module.js:575:10)
+    at startup (node.js:160:18)
+    at node.js:456:3
+C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:3
+process.chdir('C:\Users\Administrator\Desktop\NodeJS');
+        ^
+
+Error: ENOENT: no such file or directory, uv_chdir
+    at Error (native)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:3:9)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+    at Function.Module._load (module.js:409:3)
+    at Function.Module.runMain (module.js:575:10)
+    at startup (node.js:160:18)
+    at node.js:456:3
+C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:3
+process.chdir('\Users\Administrator\Desktop\NodeJS');
+        ^
+
+Error: ENOENT: no such file or directory, uv_chdir
+    at Error (native)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:3:9)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+    at Function.Module._load (module.js:409:3)
+    at Function.Module.runMain (module.js:575:10)
+    at startup (node.js:160:18)
+    at node.js:456:3
+C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:3
+process.chdir('\Users\Administrator\Desktop\NodeJS');
+        ^
+
+Error: ENOENT: no such file or directory, uv_chdir
+    at Error (native)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:3:9)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+    at Function.Module._load (module.js:409:3)
+    at Function.Module.runMain (module.js:575:10)
+    at startup (node.js:160:18)
+    at node.js:456:3
+C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:3
+process.chdir('\Users\Administrator\Desktop\NodeJS');
+        ^
+
+Error: ENOENT: no such file or directory, uv_chdir
+    at Error (native)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:3:9)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+    at Function.Module._load (module.js:409:3)
+    at Function.Module.runMain (module.js:575:10)
+    at startup (node.js:160:18)
+    at node.js:456:3
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: Cannot find ffmpeg
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\processor.js:131:22
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\capabilities.js:123:9
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\async\lib\async.js:52:16
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\async\lib\async.js:1209:30
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\capabilities.js:116:11
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\utils.js:223:16
+    at F (C:\Users\Administrator\Desktop\NodeJS\node_modules\which\which.js:69:16)
+    at E (C:\Users\Administrator\Desktop\NodeJS\node_modules\which\which.js:81:29)
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\which\which.js:90:16
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\isexe\index.js:44:5
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: Cannot find ffmpeg
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\processor.js:131:22
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\capabilities.js:123:9
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\async\lib\async.js:52:16
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\async\lib\async.js:1209:30
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\capabilities.js:116:11
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\utils.js:223:16
+    at F (C:\Users\Administrator\Desktop\NodeJS\node_modules\which\which.js:69:16)
+    at E (C:\Users\Administrator\Desktop\NodeJS\node_modules\which\which.js:81:29)
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\which\which.js:90:16
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\isexe\index.js:44:5
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: Cannot find ffmpeg
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\processor.js:131:22
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\capabilities.js:123:9
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\async\lib\async.js:52:16
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\async\lib\async.js:1209:30
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\capabilities.js:116:11
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\utils.js:223:16
+    at F (C:\Users\Administrator\Desktop\NodeJS\node_modules\which\which.js:69:16)
+    at E (C:\Users\Administrator\Desktop\NodeJS\node_modules\which\which.js:81:29)
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\which\which.js:90:16
+    at C:\Users\Administrator\Desktop\NodeJS\node_modules\isexe\index.js:44:5
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: ffmpeg exited with code 1: pipe:0: Invalid data found when processing input
+
+    at ChildProcess.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\processor.js:177:22)
+    at emitTwo (events.js:106:13)
+    at ChildProcess.emit (events.js:191:7)
+    at Process.ChildProcess._handle.onexit (internal/child_process.js:204:12)
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: ffmpeg exited with code 1: pipe:0: Invalid data found when processing input
+
+    at ChildProcess.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\processor.js:177:22)
+    at emitTwo (events.js:106:13)
+    at ChildProcess.emit (events.js:191:7)
+    at Process.ChildProcess._handle.onexit (internal/child_process.js:204:12)
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: ffmpeg exited with code 1: pipe:0: Invalid data found when processing input
+
+    at ChildProcess.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\processor.js:177:22)
+    at emitTwo (events.js:106:13)
+    at ChildProcess.emit (events.js:191:7)
+    at Process.ChildProcess._handle.onexit (internal/child_process.js:204:12)
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: ffmpeg exited with code 1: pipe:0: Invalid data found when processing input
+
+    at ChildProcess.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\processor.js:177:22)
+    at emitTwo (events.js:106:13)
+    at ChildProcess.emit (events.js:191:7)
+    at Process.ChildProcess._handle.onexit (internal/child_process.js:204:12)
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: ffmpeg exited with code 1: pipe:0: Invalid data found when processing input
+
+    at ChildProcess.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\processor.js:177:22)
+    at emitTwo (events.js:106:13)
+    at ChildProcess.emit (events.js:191:7)
+    at Process.ChildProcess._handle.onexit (internal/child_process.js:204:12)
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: ffmpeg exited with code 1: pipe:0: Invalid data found when processing input
+
+    at ChildProcess.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\processor.js:177:22)
+    at emitTwo (events.js:106:13)
+    at ChildProcess.emit (events.js:191:7)
+    at Process.ChildProcess._handle.onexit (internal/child_process.js:204:12)
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: ffmpeg exited with code 1: pipe:0: Invalid data found when processing input
+
+    at ChildProcess.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\node_modules\fluent-ffmpeg\lib\processor.js:177:22)
+    at emitTwo (events.js:106:13)
+    at ChildProcess.emit (events.js:191:7)
+    at Process.ChildProcess._handle.onexit (internal/child_process.js:204:12)
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE :::16160
+    at Object.exports._errnoException (util.js:1007:11)
+    at exports._exceptionWithHostPort (util.js:1030:20)
+    at Server._listen2 (net.js:1253:14)
+    at listen (net.js:1289:10)
+    at Server.listen (net.js:1385:5)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:143:8)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE :::16160
+    at Object.exports._errnoException (util.js:1007:11)
+    at exports._exceptionWithHostPort (util.js:1030:20)
+    at Server._listen2 (net.js:1253:14)
+    at listen (net.js:1289:10)
+    at Server.listen (net.js:1385:5)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:143:8)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE :::16160
+    at Object.exports._errnoException (util.js:1007:11)
+    at exports._exceptionWithHostPort (util.js:1030:20)
+    at Server._listen2 (net.js:1253:14)
+    at listen (net.js:1289:10)
+    at Server.listen (net.js:1385:5)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:143:8)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE :::16160
+    at Object.exports._errnoException (util.js:1007:11)
+    at exports._exceptionWithHostPort (util.js:1030:20)
+    at Server._listen2 (net.js:1253:14)
+    at listen (net.js:1289:10)
+    at Server.listen (net.js:1385:5)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:143:8)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE :::16160
+    at Object.exports._errnoException (util.js:1007:11)
+    at exports._exceptionWithHostPort (util.js:1030:20)
+    at Server._listen2 (net.js:1253:14)
+    at listen (net.js:1289:10)
+    at Server.listen (net.js:1385:5)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:143:8)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE :::16160
+    at Object.exports._errnoException (util.js:1007:11)
+    at exports._exceptionWithHostPort (util.js:1030:20)
+    at Server._listen2 (net.js:1253:14)
+    at listen (net.js:1289:10)
+    at Server.listen (net.js:1385:5)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:143:8)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+(node:3364) Warning: Possible EventEmitter memory leak detected. 11 error listeners added. Use emitter.setMaxListeners() to increase limit
+(node:3364) Warning: Possible EventEmitter memory leak detected. 11 error listeners added. Use emitter.setMaxListeners() to increase limit
+(node:2432) Warning: Possible EventEmitter memory leak detected. 11 error listeners added. Use emitter.setMaxListeners() to increase limit
+(node:2432) Warning: Possible EventEmitter memory leak detected. 11 error listeners added. Use emitter.setMaxListeners() to increase limit
+(node:5040) Warning: Possible EventEmitter memory leak detected. 11 error listeners added. Use emitter.setMaxListeners() to increase limit
+(node:5040) Warning: Possible EventEmitter memory leak detected. 11 error listeners added. Use emitter.setMaxListeners() to increase limit
+(node:5040) Warning: Possible EventEmitter memory leak detected. 11 end listeners added. Use emitter.setMaxListeners() to increase limit
+(node:5040) Warning: Possible EventEmitter memory leak detected. 11 end listeners added. Use emitter.setMaxListeners() to increase limit
+(node:5040) Warning: Possible EventEmitter memory leak detected. 11 data listeners added. Use emitter.setMaxListeners() to increase limit
+(node:5040) Warning: Possible EventEmitter memory leak detected. 11 data listeners added. Use emitter.setMaxListeners() to increase limit
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE :::16160
+    at Object.exports._errnoException (util.js:1007:11)
+    at exports._exceptionWithHostPort (util.js:1030:20)
+    at Server._listen2 (net.js:1253:14)
+    at listen (net.js:1289:10)
+    at Server.listen (net.js:1385:5)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:151:8)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE :::16160
+    at Object.exports._errnoException (util.js:1007:11)
+    at exports._exceptionWithHostPort (util.js:1030:20)
+    at Server._listen2 (net.js:1253:14)
+    at listen (net.js:1289:10)
+    at Server.listen (net.js:1385:5)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:151:8)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+events.js:160
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE :::16160
+    at Object.exports._errnoException (util.js:1007:11)
+    at exports._exceptionWithHostPort (util.js:1030:20)
+    at Server._listen2 (net.js:1253:14)
+    at listen (net.js:1289:10)
+    at Server.listen (net.js:1385:5)
+    at Object.<anonymous> (C:\Users\Administrator\Desktop\NodeJS\Kristina_proxy.js:151:8)
+    at Module._compile (module.js:541:32)
+    at Object.Module._extensions..js (module.js:550:10)
+    at Module.load (module.js:458:32)
+    at tryModuleLoad (module.js:417:12)
+(node:6716) Warning: Possible EventEmitter memory leak detected. 11 error listeners added. Use emitter.setMaxListeners() to increase limit
+(node:6716) Warning: Possible EventEmitter memory leak detected. 11 error listeners added. Use emitter.setMaxListeners() to increase limit
+(node:3748) Warning: Possible EventEmitter memory leak detected. 11 error listeners added. Use emitter.setMaxListeners() to increase limit
+(node:3748) Warning: Possible EventEmitter memory leak detected. 11 error listeners added. Use emitter.setMaxListeners() to increase limit
