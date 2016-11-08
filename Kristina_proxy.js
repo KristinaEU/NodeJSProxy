@@ -12,6 +12,7 @@ var http = require('http');
 var https = require('https');
 var fs = require('fs');
 var WebSocket = require('ws').Server;
+var dgram = require('dgram');
 
 var options = {
   key: fs.readFileSync('cert/ec2-52-29-254-9.key'),
@@ -33,10 +34,11 @@ var server = https.createServer(options, function (req, res) {
   }
 
   fileServer.serve(req, res);
-})
+});
 
 var myAudioStream = new require('stream').Transform();
 var myAudioBuf = [];
+
 myAudioStream._transform = function (chunk, encoding, done) {
   if (chunk.length < 50) {
     myAudioBuf.push(chunk);
@@ -50,18 +52,19 @@ myAudioStream._transform = function (chunk, encoding, done) {
     }
   }
   done()
-}
+};
+
 myAudioStream.on('error', function (err) {
   console.log("stream error", err);
 }).on('pause', function () {
   console.log("Audio paused")
-})
-  .on('end', function () {
-    console.log("Audio ended")
-  })
-;
+}).on('end', function () {
+  console.log("Audio ended")
+});
+
 var mystream = new require('stream').Transform();
 var myBuf = [];
+
 mystream._transform = function (chunk, encoding, done) {
   if (chunk.length < 50) {
     myBuf.push(chunk);
@@ -75,16 +78,15 @@ mystream._transform = function (chunk, encoding, done) {
     }
   }
   done()
-}
+};
+
 mystream.on('error', function (err) {
   console.log("stream error", err);
 }).on('pause', function () {
   console.log("paused")
-})
-  .on('end', function () {
-    console.log("ended")
-  })
-;
+}).on('end', function () {
+  console.log("ended")
+});
 
 var videoCommand = ffmpeg().input(mystream)
 //.inputOptions('-loglevel verbose')
@@ -108,7 +110,8 @@ var videoCommand = ffmpeg().input(mystream)
   })
   .on('stderr', function (stderrLine) {
     //console.log('Stderr output: ' + stderrLine);
-  }).on('codecData', function (data) {
+  })
+  .on('codecData', function (data) {
     console.log('Input is ' + data.audio + ' audio ' +
       'with ' + data.video + ' video');
   })
@@ -150,6 +153,16 @@ var audioCommand = ffmpeg().input(myAudioStream)
     console.log('ignore ffmpeg error', error);
   });
 
+var SSICaller = function (message) {
+  var client = dgram.createSocket('udp4');
+  var PORT = "1338";
+  var HOST = "localhost";
+  client.send(message, 0, message.length, PORT, HOST, function (err, bytes) {
+    if (err) throw err;
+    console.log('UDP message sent to ' + HOST + ':' + PORT);
+    client.close();
+  });
+};
 
 //Websocket (Both audio and video):
 var wss = new WebSocket({server: server});
@@ -183,27 +196,28 @@ wss.on('connection', function (ws) {
         };
 
         var req = http.request(options, function (res) {
-            console.log("STATUS: ${res.statusCode}");
-            console.log("HEADERS: ${JSON.stringify(res.headers)}");
-            res.setEncoding('utf8');
-            res.on('data', function (chunk) {
-              console.log("BODY: ${chunk}");
-            })
-            ;
-            res.on('end', function () {
-              console.log("No more data in response.");
-            })
-            ;
-          })
-          ;
+          console.log("STATUS: ${res.statusCode}");
+          console.log("HEADERS: ${JSON.stringify(res.headers)}");
+          res.setEncoding('utf8');
+          res.on('data', function (chunk) {
+            console.log("BODY: ${chunk}");
+          });
+          res.on('end', function () {
+            console.log("No more data in response.");
+          });
+        });
         req.on('error', function (e) {
           console.log("problem with request: ${e.message}");
-        })
-        ;
+        });
         // write data to request body
         req.write(data);
         req.end();
-        console.log("forwarding VSM request", parsed_data);
+        console.log("forwarded VSM request", parsed_data);
+
+        if (parsed_data[vocapia-model]){
+          SSICaller("vocapia language="+parsed_data[vocapia-model]);
+        }
+
       } else {
         console.log("Unknown data received:", data, parsed_data);
       }

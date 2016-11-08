@@ -1,0 +1,28 @@
+{
+  "name": "nodejsproxy",
+  "version": "1.0.0",
+  "description": "Kristina EU Project proxy tool",
+  "main": "Kristina_proxy.js",
+  "dependencies": {
+    "dgram": "^1.0.1",
+    "fluent-ffmpeg": "^2.1.0",
+    "http": "^0.0.0",
+    "https": "^1.0.0",
+    "node-static": "^0.7.9",
+    "node-windows": "^0.1.11"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KristinaEU/NodeJSProxy.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KristinaEU/NodeJSProxy/issues"
+  },
+  "homepage": "https://github.com/KristinaEU/NodeJSProxy#readme"
+}
