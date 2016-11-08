@@ -214,10 +214,14 @@ wss.on('connection', function (ws) {
         req.end();
         console.log("forwarded VSM request", parsed_data);
 
-        if (parsed_data[vocapia-model]){
-          SSICaller("vocapia language="+parsed_data[vocapia-model]);
-        }
-
+		if (parsed_data.arg && parsed_data.arg.val){
+			var parsed_innerdata = JSON.parse(parsed_data.arg.val);
+			if (parsed_innerdata["vocapia-model"]){
+				SSICaller("vocapia language="+parsed_innerdata["vocapia-model"]);
+			}
+		} else {
+			console.log("Warning: parsed data didn't contain expected fields '.arg.val'!");
+		}
       } else {
         console.log("Unknown data received:", data, parsed_data);
       }
