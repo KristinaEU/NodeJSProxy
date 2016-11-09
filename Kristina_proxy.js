@@ -200,7 +200,8 @@ wss.on('connection', function (ws) {
           console.log("HEADERS: ${JSON.stringify(res.headers)}");
           res.setEncoding('utf8');
           res.on('data', function (chunk) {
-            console.log("BODY: ${chunk}");
+            //send chunk back to GUI:
+            ws.send(chunk);
           });
           res.on('end', function () {
             console.log("No more data in response.");
