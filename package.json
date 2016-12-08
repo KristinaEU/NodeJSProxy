@@ -8,6 +8,7 @@
     "fluent-ffmpeg": "^2.1.0",
     "http": "^0.0.0",
     "https": "^1.0.0",
+    "lokijs": "^1.4.1",
     "node-static": "^0.7.9",
     "node-windows": "^0.1.11"
   },

@@ -1,10 +1,5 @@
 'use strict';
 
-//Set environment for service run
-process.chdir('/Users/Administrator/Desktop/NodeJS');
-process.env.Path = process.env.Path + ";C:\\Program Files (x86)\\ffmpeg\\bin";
-
-console.log("New server");
 var nodeStatic = require('node-static');
 var ffmpeg = require('fluent-ffmpeg');
 
@@ -13,6 +8,18 @@ var https = require('https');
 var fs = require('fs');
 var WebSocket = require('ws').Server;
 var dgram = require('dgram');
+var loki = require('lokijs');
+
+var exportFuncs = {};
+
+//Set environment for service run
+fs.access('/Users/Administrator/Desktop/NodeJS', fs.F_OK, function (err) {
+  if (!err) {
+    process.chdir('/Users/Administrator/Desktop/NodeJS');
+    process.env.Path = process.env.Path + ";C:\\Program Files (x86)\\ffmpeg\\bin";
+  }
+});
+
 
 var options = {
   key: fs.readFileSync('cert/ec2-52-29-254-9.key'),
@@ -35,6 +42,181 @@ var server = https.createServer(options, function (req, res) {
 
   fileServer.serve(req, res);
 });
+
+/*
+ Store timeline info
+ Token generator
+ Token checker
+ API
+
+ */
+var timeline = null;
+var db = new loki('loki.json', {
+  autosave: true,
+  autosaveInterval: 1000,
+  autoload: true,
+  verbose: true
+});
+db.loadDatabase({}, function () {
+  timeline = db.getCollection('timeline');
+  if (!timeline) {
+    timeline = db.addCollection('timeline', {exact: ['start', 'end'], indices: ['start', 'end']});
+  }
+  db.saveDatabase();
+});
+
+var getTimeslots = function (start, end) {
+  if (timeline == null) return false;
+  //Get all start/end within the range, or completely overlapping new range (start before start, end after end)
+  return timeline.chain().find({
+    '$or': [
+      {'$and': [{'start': {'$gte': start}}, {'start': {'$lt': end}}]},
+      {'$and': [{'end': {'$gt': start}}, {'end': {'$lte': end}}]},
+      {'$and': [{'start': {'$lte': start}}, {'end': {'$gte': end}}]}
+    ]
+  }).simplesort('start').data();
+};
+
+var storeTimeslot = function (start, end, contents) {
+  //put in database, Fail if it would overwrite
+  if (timeline == null) return false;
+  if (getTimeslots(start, end).length === 0) {
+    timeline.insert({start: start, end: end, contents: contents});
+    return true;
+  } else {
+    return false;
+  }
+};
+
+var getTimeslotAt = function (time) {
+  if (timeline == null) return false;
+
+  var slot = timeline.findOne({'$and': [{'start': {'$lte': time}}, {'end': {'$gt': time}}]});
+  if (slot) {
+    return slot;
+  }
+  return false;
+};
+
+var getCurrentTimeslot = function () {
+  return getTimeslotAt(new Date().getTime());
+};
+
+
+var deleteTimeslot = function (timeslot) {
+  if (timeline == null) return false;
+  timeline.chain().find({'$and': [{'start': timeslot.start}, {'end': timeslot.end}]}).remove();
+};
+
+var timelineTester = function () {
+  setTimeout(function () {
+    storeTimeslot(1, 5, "1-5");
+    storeTimeslot(5, 7, "5-7");
+
+    var timeslot = getTimeslotAt(6);
+    deleteTimeslot(timeslot);
+    storeTimeslot(6, 9, "6-9");
+
+
+    console.log(getTimeslotAt(6));
+    console.log(getTimeslotAt(7));
+    console.log(getTimeslotAt(4.999999));
+    console.log(getTimeslots(0, 10));
+
+    var start = new Date();
+    start.setHours(0);
+    start.setMinutes(0);
+    start.setSeconds(0);
+    start.setMilliseconds(0);
+    var end = new Date();
+    end.setHours(24);
+    end.setMinutes(0);
+    end.setSeconds(0);
+    end.setMilliseconds(0);
+    storeTimeslot(start.getTime(), end.getTime(), "Today");
+    console.log(getCurrentTimeslot());
+
+
+  }, 2000);
+};
+//timelineTester();
+
+
+//Reservation system:
+
+//Simple GUID generator (random based, not genuine, no guarantees)
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}
+
+
+//is currently reserved?
+exportFuncs.getReservation = function () {
+  var timeslot = getCurrentTimeslot();
+  if (timeslot) {
+    return {'start': timeslot.start, 'end': timeslot.end, 'reservation': timeslot.contents};
+  }
+  return false;
+};
+//Reserve for a future timeslot?
+exportFuncs.reserveFrom = function (reservation, start, duration) {
+  if (!reservation || !start || !duration){
+    console.log("Incorrect parameters for reserveFrom:",reservation,start,duration);
+    return false;
+  }
+  if (!reservation.token) {
+    reservation["token"] = guid();
+  }
+  var end = start + duration;
+  return storeTimeslot(start, end, reservation);
+};
+//Reserve for some time from now, returns false if blocked.
+exportFuncs.reserve = function (reservation, duration) {
+  var start = new Date().getTime();
+  return exportFuncs.reserveFrom(reservation, start, duration);
+};
+
+//Cancel further reservation
+exportFuncs.cancelRest = function (reservation, start) {
+  var timeslot = getTimeslotAt(start);
+  if (timeslot.contents.token && (timeslot.contents.token === reservation.token)) {
+    deleteTimeslot(timeslot);
+    storeTimeslot(timeslot.start, new Date().getTime(), timeslot.contents);
+  }
+};
+
+exportFuncs.getReservations = function (start, end) {
+  var timeslots = getTimeslots(start, end);
+
+  return timeslots.map(function (timeslot) {
+    return {'start': timeslot.start, 'end': timeslot.end, 'reservation': timeslot.contents};
+  });
+};
+
+//TODO: overrule reservation!
+
+var reservationTester = function () {
+  setTimeout(function () {
+
+    console.log(exportFuncs.reserve({}, 20000));
+    var reservation = exportFuncs.getReservation();
+
+    console.log(exportFuncs.reserveFrom({number: 2}, new Date().getTime() + 40000, 20000));
+    exportFuncs.cancelRest(reservation);
+    console.log(exportFuncs.getReservations());
+
+
+  }, 2000);
+};
+// reservationTester();
+
 
 var myAudioStream = new require('stream').Transform();
 var myAudioBuf = [];
@@ -131,7 +313,7 @@ var audioCommand = ffmpeg().input(myAudioStream)
   .audioCodec('copy')
   .format('mpegts')
   .outputOptions(
-    '-preset', 'veryfast', '-tune', 'zerolatency')
+    '-preset', 'veryfast', '-tune', 'zerolatency', '-ar', '48000')
   //  .output('udp://192.168.173.1:1111')
   .output('udp://127.0.0.1:2222')
   .on('start', function (commandLine) {
@@ -175,15 +357,35 @@ wss.on('connection', function (ws) {
   videoCommand.run();
   audioCommand.run();
 
+  ws.on('error', function(error){
+    console.log("Websocket failure:",error);
+  });
+
   ws.on('message', function (data, flags) {
     if (Buffer.isBuffer(data)) {
+      //Todo: Check token? (meta data?)
       mystream.write(data);
       mystream.resume();
       myAudioStream.write(data);
       myAudioStream.resume();
     } else {
+
       var parsed_data = JSON.parse(data);
-      if (parsed_data["target"] === "VSM") {
+      if (parsed_data["target"] === "PROXY") {
+        var method = parsed_data["method"];
+        var params = parsed_data['params'];
+        if (exportFuncs[method]) {
+          var res =exportFuncs[method].apply(this,params);
+
+          ws.send(JSON.stringify({type:'reply',method:method,result:res}));
+          console.log("Handled Proxy request", parsed_data, " --> ", JSON.stringify(res));
+        } else {
+          console.log("Unknown Proxy request", parsed_data);
+        }
+
+      } else if (parsed_data["target"] === "VSM") {
+        //Todo: Check token!
+
         //Send message to VSM
         var options = {
           hostname: 'localhost',
@@ -201,7 +403,7 @@ wss.on('connection', function (ws) {
           res.setEncoding('utf8');
           res.on('data', function (chunk) {
             //send chunk back to GUI:
-            ws.send(chunk);
+            ws.send(JSON.stringify(chunk));
           });
           res.on('end', function () {
             console.log("No more data in response.");
@@ -215,14 +417,14 @@ wss.on('connection', function (ws) {
         req.end();
         console.log("forwarded VSM request", parsed_data);
 
-		if (parsed_data.arg && parsed_data.arg.val){
-			var parsed_innerdata = JSON.parse(parsed_data.arg.val);
-			if (parsed_innerdata["vocapia-model"]){
-				SSICaller("vocapia language="+parsed_innerdata["vocapia-model"]);
-			}
-		} else {
-			console.log("Warning: parsed data didn't contain expected fields '.arg.val'!");
-		}
+        if (parsed_data.arg && parsed_data.arg.val) {
+          var parsed_innerdata = JSON.parse(parsed_data.arg.val);
+          if (parsed_innerdata["vocapia-model"]) {
+            SSICaller("vocapia language=" + parsed_innerdata["vocapia-model"]);
+          }
+        } else {
+          console.log("Warning: parsed data didn't contain expected fields '.arg.val'!");
+        }
       } else {
         console.log("Unknown data received:", data, parsed_data);
       }
@@ -237,5 +439,6 @@ wss.on('connection', function (ws) {
 
 });
 server.listen(16160);
+console.log("New server at port: 16160");
 
 
