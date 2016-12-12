@@ -55,15 +55,15 @@ var db = new loki('loki.json', {
   autosave: true,
   autosaveInterval: 1000,
   autoload: true,
+  autoloadCallback: loadHandler,
   verbose: true
 });
-db.loadDatabase({}, function () {
+function loadHandler(){
   timeline = db.getCollection('timeline');
   if (!timeline) {
     timeline = db.addCollection('timeline', {exact: ['start', 'end'], indices: ['start', 'end']});
   }
-  db.saveDatabase();
-});
+}
 
 var getTimeslots = function (start, end) {
   if (timeline == null) return false;
@@ -167,8 +167,8 @@ exportFuncs.getReservation = function () {
 };
 //Reserve for a future timeslot?
 exportFuncs.reserveFrom = function (reservation, start, duration) {
-  if (!reservation || !start || !duration){
-    console.log("Incorrect parameters for reserveFrom:",reservation,start,duration);
+  if (!reservation || !start || !duration) {
+    console.log("Incorrect parameters for reserveFrom:", reservation, start, duration);
     return false;
   }
   if (!reservation.token) {
@@ -183,10 +183,37 @@ exportFuncs.reserve = function (reservation, duration) {
   return exportFuncs.reserveFrom(reservation, start, duration);
 };
 
+//Extend reservation
+exportFuncs.extend = function (reservation,duration) {
+  var timeslot;
+  if (reservation.start) {
+    timeslot = getTimeslotAt(reservation.start);
+  } else {
+    timeslot = getCurrentTimeslot();
+  }
+  var reservation_token = reservation.token;
+  if (!reservation_token && reservation.reservation) {
+    reservation_token = reservation.reservation.token;
+  }
+  if (timeslot.contents.token && reservation_token && (timeslot.contents.token === reservation_token)) {
+    deleteTimeslot(timeslot);
+    storeTimeslot(timeslot.start, timeslot.end+duration, timeslot.contents);
+  }
+};
+
 //Cancel further reservation
-exportFuncs.cancelRest = function (reservation, start) {
-  var timeslot = getTimeslotAt(start);
-  if (timeslot.contents.token && (timeslot.contents.token === reservation.token)) {
+exportFuncs.cancelRest = function (reservation) {
+  var timeslot;
+  if (reservation.start) {
+    timeslot = getTimeslotAt(reservation.start);
+  } else {
+    timeslot = getCurrentTimeslot();
+  }
+  var reservation_token = reservation.token;
+  if (!reservation_token && reservation.reservation) {
+    reservation_token = reservation.reservation.token;
+  }
+  if (timeslot.contents.token && reservation_token && (timeslot.contents.token === reservation_token)) {
     deleteTimeslot(timeslot);
     storeTimeslot(timeslot.start, new Date().getTime(), timeslot.contents);
   }
@@ -198,6 +225,14 @@ exportFuncs.getReservations = function (start, end) {
   return timeslots.map(function (timeslot) {
     return {'start': timeslot.start, 'end': timeslot.end, 'reservation': timeslot.contents};
   });
+};
+
+var getCurrentToken = function () {
+  var reservation = exportFuncs.getReservation();
+  if (reservation && reservation.reservation && reservation.reservation.token) {
+    return reservation.reservation.token;
+  }
+  return false;
 };
 
 //TODO: overrule reservation!
@@ -279,7 +314,7 @@ var videoCommand = ffmpeg().input(mystream)
   .format('mpegts')
   .fps(5)
   .outputOptions(
-    '-preset', 'veryfast', '-tune', 'zerolatency',
+    '-map', '0', '-preset', 'veryfast', '-tune', 'zerolatency',
     '-filter:v', 'fps=5', '-x264opts',
     'crf=20:vbv-bufsize=100:vbv-maxrate=3000:intra-refresh=1:slice-max-size=1500:keyint=1:scenecut=-1:ref=1')
   //  .output('udp://192.168.173.1:1111')
@@ -313,7 +348,7 @@ var audioCommand = ffmpeg().input(myAudioStream)
   .audioCodec('copy')
   .format('mpegts')
   .outputOptions(
-    '-preset', 'veryfast', '-tune', 'zerolatency', '-ar', '48000')
+    '-map', '0', '-preset', 'veryfast', '-tune', 'zerolatency', '-ar', '48000')
   //  .output('udp://192.168.173.1:1111')
   .output('udp://127.0.0.1:2222')
   .on('start', function (commandLine) {
@@ -346,87 +381,99 @@ var SSICaller = function (message) {
   });
 };
 
-//Websocket (Both audio and video):
-var wss = new WebSocket({server: server});
-wss.on('connection', function (ws) {
-  console.log("New connection");
+var resetFFMPeg = function () {
   ////reset/close ffmpeg
   videoCommand.kill();
   audioCommand.kill();
 
   videoCommand.run();
   audioCommand.run();
+};
 
-  ws.on('error', function(error){
-    console.log("Websocket failure:",error);
+//Websocket (Both audio and video):
+var wss = new WebSocket({server: server});
+wss.on('connection', function (ws) {
+  console.log("New connection");
+  var token = null;
+
+  ws.on('error', function (error) {
+    console.log("Websocket failure:", error);
   });
 
   ws.on('message', function (data, flags) {
     if (Buffer.isBuffer(data)) {
-      //Todo: Check token? (meta data?)
-      mystream.write(data);
-      mystream.resume();
-      myAudioStream.write(data);
-      myAudioStream.resume();
+      if (this.token === getCurrentToken()) {
+        mystream.write(data);
+        mystream.resume();
+        myAudioStream.write(data);
+        myAudioStream.resume();
+      }
     } else {
-
       var parsed_data = JSON.parse(data);
+      if (parsed_data["token"]) {
+        this.token = parsed_data["token"];
+      }
+      if (parsed_data["target"] === "RESET"){
+        if (this.token === getCurrentToken()) {
+          resetFFMPeg();
+        }
+      }
       if (parsed_data["target"] === "PROXY") {
         var method = parsed_data["method"];
         var params = parsed_data['params'];
         if (exportFuncs[method]) {
-          var res =exportFuncs[method].apply(this,params);
+          var res = exportFuncs[method].apply(this, params);
 
-          ws.send(JSON.stringify({type:'reply',method:method,result:res}));
+          ws.send(JSON.stringify({type: 'reply', method: method, result: res}));
           console.log("Handled Proxy request", parsed_data, " --> ", JSON.stringify(res));
         } else {
           console.log("Unknown Proxy request", parsed_data);
         }
 
       } else if (parsed_data["target"] === "VSM") {
-        //Todo: Check token!
+        if (this.token === getCurrentToken()) {
+          //Send message to VSM
+          var options = {
+            hostname: 'localhost',
+            port: 11220,
+            path: '/',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          };
 
-        //Send message to VSM
-        var options = {
-          hostname: 'localhost',
-          port: 11220,
-          path: '/',
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        };
-
-        var req = http.request(options, function (res) {
-          console.log("STATUS: ${res.statusCode}");
-          console.log("HEADERS: ${JSON.stringify(res.headers)}");
-          res.setEncoding('utf8');
-          res.on('data', function (chunk) {
-            //send chunk back to GUI:
-            ws.send(JSON.stringify(chunk));
+          var req = http.request(options, function (res) {
+            console.log("STATUS: ${res.statusCode}");
+            console.log("HEADERS: ${JSON.stringify(res.headers)}");
+            res.setEncoding('utf8');
+            res.on('data', function (chunk) {
+              //send chunk back to GUI:
+              ws.send(JSON.stringify(chunk));
+            });
+            res.on('end', function () {
+              console.log("No more data in response.");
+            });
           });
-          res.on('end', function () {
-            console.log("No more data in response.");
+          req.on('error', function (e) {
+            console.log("problem with request: ${e.message}");
           });
-        });
-        req.on('error', function (e) {
-          console.log("problem with request: ${e.message}");
-        });
-        // write data to request body
-        req.write(data);
-        req.end();
-        console.log("forwarded VSM request", parsed_data);
+          // write data to request body
+          req.write(data);
+          req.end();
+          console.log("forwarded VSM request", parsed_data);
 
-        if (parsed_data.arg && parsed_data.arg.val) {
-          var parsed_innerdata = JSON.parse(parsed_data.arg.val);
-          if (parsed_innerdata["vocapia-model"]) {
-            SSICaller("vocapia language=" + parsed_innerdata["vocapia-model"]);
+          if (parsed_data.arg && parsed_data.arg.val) {
+            var parsed_innerdata = JSON.parse(parsed_data.arg.val);
+            if (parsed_innerdata["vocapia-model"]) {
+              SSICaller("vocapia language=" + parsed_innerdata["vocapia-model"]);
+            }
+          } else {
+            console.log("Warning: parsed data didn't contain expected fields '.arg.val'!");
           }
         } else {
-          console.log("Warning: parsed data didn't contain expected fields '.arg.val'!");
+          console.log("Unknown data received:", data, parsed_data);
         }
-      } else {
-        console.log("Unknown data received:", data, parsed_data);
       }
     }
   });
