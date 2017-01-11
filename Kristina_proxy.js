@@ -220,8 +220,10 @@ exportFuncs.cancelRest = function (reservation) {
 };
 
 exportFuncs.getReservations = function (start, end) {
+	console.log("getReservations:",start,end);
   var timeslots = getTimeslots(start, end);
 
+  console.log("timeslots:",timeslots.length);
   return timeslots.map(function (timeslot) {
     return {'start': timeslot.start, 'end': timeslot.end, 'reservation': timeslot.contents};
   });
@@ -341,14 +343,14 @@ var videoCommand = ffmpeg().input(mystream)
 
 //Spawned Ffmpeg with command: ffmpeg -loglevel verbose -f webm -i pipe:0 -acodec copy -vn -f mpegts -preset veryfast -tune zerolatency udp://127.0.0.1:2222
 var audioCommand = ffmpeg().input(myAudioStream)
-//.inputOptions('-loglevel verbose')
+  //.inputOptions('-loglevel verbose')
   .inputOptions('-nostdin')
   .inputFormat('webm')
   .noVideo()
-  .audioCodec('copy')
+  .audioCodec('mp2')
   .format('mpegts')
   .outputOptions(
-    '-map', '0', '-preset', 'veryfast', '-tune', 'zerolatency', '-ar', '48000')
+   '-map', '0', '-preset', 'veryfast', '-tune', 'zerolatency', '-ar', '16000','-ac','1')
   //  .output('udp://192.168.173.1:1111')
   .output('udp://127.0.0.1:2222')
   .on('start', function (commandLine) {
@@ -401,6 +403,7 @@ wss.on('connection', function (ws) {
   });
 
   ws.on('message', function (data, flags) {
+	  
     if (Buffer.isBuffer(data)) {
       if (this.token === getCurrentToken()) {
         mystream.write(data);
@@ -409,6 +412,7 @@ wss.on('connection', function (ws) {
         myAudioStream.resume();
       }
     } else {
+		console.log("Received message",data);
       var parsed_data = JSON.parse(data);
       if (parsed_data["token"]) {
         this.token = parsed_data["token"];
