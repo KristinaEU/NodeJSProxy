@@ -453,10 +453,12 @@ wss.on('connection', function (ws) {
             res.setEncoding('utf8');
             res.on('data', function (chunk) {
               //send chunk back to GUI:
+              chunk['type']='vsm_data';
               ws.send(JSON.stringify(chunk));
             });
             res.on('end', function () {
               console.log("No more data in response.");
+              ws.send(JSON.stringify({type: 'end_vsm_data'}))
             });
           });
           req.on('error', function (e) {
