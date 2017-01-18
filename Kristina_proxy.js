@@ -450,10 +450,10 @@ wss.on('connection', function (ws) {
           var req = http.request(options, function (res) {
             console.log("STATUS: ${res.statusCode}");
             console.log("HEADERS: ${JSON.stringify(res.headers)}");
+            ws.send(JSON.stringify({type: 'start_vsm_data'}))
             res.setEncoding('utf8');
             res.on('data', function (chunk) {
               //send chunk back to GUI:
-              chunk['type']='vsm_data';
               ws.send(JSON.stringify(chunk));
             });
             res.on('end', function () {
