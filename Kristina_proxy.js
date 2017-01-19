@@ -427,8 +427,9 @@ wss.on('connection', function (ws) {
         var params = parsed_data['params'];
         if (exportFuncs[method]) {
           var res = exportFuncs[method].apply(this, params);
-
+          ws.send(JSON.stringify({type: 'start_data'}));
           ws.send(JSON.stringify({type: 'reply', method: method, result: res}));
+          ws.send(JSON.stringify({type: 'end_data'}));
           console.log("Handled Proxy request", parsed_data, " --> ", JSON.stringify(res));
         } else {
           console.log("Unknown Proxy request", parsed_data);
@@ -443,14 +444,14 @@ wss.on('connection', function (ws) {
             path: '/',
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
+              'Content-Type': 'application/json'
             }
           };
 
           var req = http.request(options, function (res) {
             console.log("STATUS: ${res.statusCode}");
             console.log("HEADERS: ${JSON.stringify(res.headers)}");
-            ws.send(JSON.stringify({type: 'start_vsm_data'}))
+            ws.send(JSON.stringify({type: 'start_data'}));
             res.setEncoding('utf8');
             res.on('data', function (chunk) {
               //send chunk back to GUI:
@@ -458,7 +459,7 @@ wss.on('connection', function (ws) {
             });
             res.on('end', function () {
               console.log("No more data in response.");
-              ws.send(JSON.stringify({type: 'end_vsm_data'}))
+              ws.send(JSON.stringify({type: 'end_data'}))
             });
           });
           req.on('error', function (e) {
