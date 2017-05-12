@@ -195,7 +195,7 @@ exportFuncs.extend = function (reservation,duration) {
   if (!reservation_token && reservation.reservation) {
     reservation_token = reservation.reservation.token;
   }
-  if (timeslot.contents.token && reservation_token && (timeslot.contents.token === reservation_token)) {
+  if (timeslot && timeslot.contents && timeslot.contents.token && reservation_token && (timeslot.contents.token === reservation_token)) {
     deleteTimeslot(timeslot);
     storeTimeslot(timeslot.start, timeslot.end+duration, timeslot.contents);
   }
