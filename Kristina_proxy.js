@@ -10,6 +10,8 @@ var WebSocket = require('ws').Server;
 var dgram = require('dgram');
 var loki = require('lokijs');
 
+var skipReservations = process.argv[2] || false;
+
 var exportFuncs = {};
 
 //Set environment for service run
@@ -405,7 +407,7 @@ wss.on('connection', function (ws) {
   ws.on('message', function (data, flags) {
 	  
     if (Buffer.isBuffer(data)) {
-      if (this.token === getCurrentToken()) {
+      if (skipReservations || this.token === getCurrentToken()) {
         mystream.write(data);
         mystream.resume();
         myAudioStream.write(data);
@@ -418,7 +420,7 @@ wss.on('connection', function (ws) {
         this.token = parsed_data["token"];
       }
       if (parsed_data["target"] === "RESET"){
-        if (this.token === getCurrentToken()) {
+        if (skipReservations || this.token === getCurrentToken()) {
           resetFFMPeg();
         }
       }
@@ -436,7 +438,7 @@ wss.on('connection', function (ws) {
         }
 
       } else if (parsed_data["target"] === "VSM") {
-        if (this.token === getCurrentToken()) {
+        if (skipReservations || this.token === getCurrentToken()) {
           //Send message to VSM
           var options = {
             hostname: 'localhost',
@@ -493,6 +495,4 @@ wss.on('connection', function (ws) {
 
 });
 server.listen(16160);
-console.log("New server at port: 16160");
-
-
+console.log("New server at port: 16160 ",skipReservations?"skipping reservations!":"including reservations!");
