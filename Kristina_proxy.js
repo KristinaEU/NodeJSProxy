@@ -22,8 +22,8 @@ fs.access('/Users/Administrator/Desktop/NodeJS', fs.F_OK, function (err) {
 
 
 var options = {
-  key: fs.readFileSync('cert/ec2-52-29-254-9.key'),
-  cert: fs.readFileSync('cert/ec2-52-29-254-9.crt'),
+  key: fs.readFileSync('cert/localhost.key'),
+  cert: fs.readFileSync('cert/localhost.crt'),
   agent: false,
   requestCert: true,
   rejectUnauthorized: false
@@ -195,7 +195,7 @@ exportFuncs.extend = function (reservation,duration) {
   if (!reservation_token && reservation.reservation) {
     reservation_token = reservation.reservation.token;
   }
-  if (timeslot.contents.token && reservation_token && (timeslot.contents.token === reservation_token)) {
+  if (timeslot && timeslot.contents && timeslot.contents.token && reservation_token && (timeslot.contents.token === reservation_token)) {
     deleteTimeslot(timeslot);
     storeTimeslot(timeslot.start, timeslot.end+duration, timeslot.contents);
   }
@@ -213,7 +213,7 @@ exportFuncs.cancelRest = function (reservation) {
   if (!reservation_token && reservation.reservation) {
     reservation_token = reservation.reservation.token;
   }
-  if (timeslot.contents.token && reservation_token && (timeslot.contents.token === reservation_token)) {
+  if (timeslot && timeslot.contents && timeslot.contents.token && reservation_token && (timeslot.contents.token === reservation_token)) {
     deleteTimeslot(timeslot);
     storeTimeslot(timeslot.start, new Date().getTime(), timeslot.contents);
   }
@@ -314,10 +314,10 @@ var videoCommand = ffmpeg().input(mystream)
   .noAudio()
   .videoCodec('libx264')
   .format('mpegts')
-  .fps(5)
+  .fps(15)
   .outputOptions(
     '-map', '0', '-preset', 'veryfast', '-tune', 'zerolatency',
-    '-filter:v', 'fps=5', '-x264opts',
+    '-filter:v', 'fps=15', '-x264opts',
     'crf=20:vbv-bufsize=100:vbv-maxrate=3000:intra-refresh=1:slice-max-size=1500:keyint=1:scenecut=-1:ref=1')
   //  .output('udp://192.168.173.1:1111')
   .output('udp://127.0.0.1:1111')
@@ -492,7 +492,7 @@ wss.on('connection', function (ws) {
   });
 
 });
-server.listen(16160);
-console.log("New server at port: 16160");
+server.listen(8001);
+console.log("New server at port: 8001");
 
 
