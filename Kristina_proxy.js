@@ -10,6 +10,8 @@ var WebSocket = require('ws').Server;
 var dgram = require('dgram');
 var loki = require('lokijs');
 
+var skipReservations = process.argv[2] || false;
+
 var exportFuncs = {};
 
 //Set environment for service run
@@ -24,6 +26,8 @@ fs.access('/Users/Administrator/Desktop/NodeJS', fs.F_OK, function (err) {
 var options = {
   key: fs.readFileSync('cert/localhost.key'),
   cert: fs.readFileSync('cert/localhost.crt'),
+//    key: fs.readFileSync('cert/ec2-52-29-254-9.key'),
+//    cert: fs.readFileSync('cert/ec2-52-29-254-9.crt'),
   agent: false,
   requestCert: true,
   rejectUnauthorized: false
@@ -405,7 +409,7 @@ wss.on('connection', function (ws) {
   ws.on('message', function (data, flags) {
 	  
     if (Buffer.isBuffer(data)) {
-      if (this.token === getCurrentToken()) {
+      if (skipReservations || this.token === getCurrentToken()) {
         mystream.write(data);
         mystream.resume();
         myAudioStream.write(data);
@@ -418,7 +422,7 @@ wss.on('connection', function (ws) {
         this.token = parsed_data["token"];
       }
       if (parsed_data["target"] === "RESET"){
-        if (this.token === getCurrentToken()) {
+        if (skipReservations || this.token === getCurrentToken()) {
           resetFFMPeg();
         }
       }
@@ -436,7 +440,7 @@ wss.on('connection', function (ws) {
         }
 
       } else if (parsed_data["target"] === "VSM") {
-        if (this.token === getCurrentToken()) {
+        if (skipReservations || this.token === getCurrentToken()) {
           //Send message to VSM
           var options = {
             hostname: 'localhost',
@@ -493,6 +497,4 @@ wss.on('connection', function (ws) {
 
 });
 server.listen(8001);
-console.log("New server at port: 8001");
-
-
+console.log("New server at port: 8001",skipReservations?"skipping reservations!":"including reservations!");
